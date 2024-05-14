@@ -8,7 +8,7 @@
     "start:prod": "set NODE_ENV=production && nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel --dist-dir ./public/js --no-hmr",
-    "build:js": "parcel build"
+    "build:js": "parcel build --dist-dir ./public/js"
   },
   "author": "Sasidhar reddy",
   "license": "ISC",
