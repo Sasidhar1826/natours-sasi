@@ -13,12 +13,7 @@ router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
-router.get(
-  '/my-tours',
-  bookingController.createBookingCheckout,
-  authController.protect,
-  viewsController.getMyTours,
-);
+router.get('/my-tours', authController.protect, viewsController.getMyTours);
 
 //in case of updating user information via non-api or form way of updating..
 router.post(
