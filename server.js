@@ -7,9 +7,9 @@ const app = require('./app');
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down....');
   console.log(err);
-  // server.close(() => {
-  //   process.exit(1);
-  // });
+  server.close(() => {
+    process.exit(1);
+  });
 });
 
 const DB = process.env.DATABASE_URL.replace(
