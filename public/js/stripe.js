@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { showAlert } from './alert';
 const stripe = Stripe(
   'pk_test_51Ow8asSEq49Iv6nu2HnctlSPSdUAt58Lq3xF4lPFhQRDK8MzcFMEtYlS0sii8sVeFtwdle36moAENUBD0R4n54Ey00lr3wcwjh',
