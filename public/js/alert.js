@@ -3,7 +3,7 @@ export const hideAlert = () => {
   if (el) el.parentElement.removeChild(el);
 };
 
-export const showAlert = (type, msg, time) => {
+export const showAlert = (type, msg, time = 7) => {
   hideAlert();
 
   const markup = `<div class="alert alert--${type}">${msg}</div>`;

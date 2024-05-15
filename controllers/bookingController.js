@@ -28,7 +28,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     payment_method_types: ['card'],
     mode: 'payment',
     customer: customer.id,
-    success_url: `${req.protocol}://${req.get('host')}/my-tours/`,
+    success_url: `${req.protocol}://${req.get('host')}/my-tours/?alert=booking`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     client_reference_id: req.params.tourId,
     line_items: [
@@ -63,24 +63,37 @@ const createBookingCheckout = async (session) => {
   await Booking.create({ tour, user, price });
 };
 
-exports.webhookCheckout = (req, res, next) => {
-  const signature = req.headers['stripe-signature'];
+exports.webhookCheckout = async (req, res, next) => {
+  const payload = req.body;
+  const sig = req.headers['stripe-signature'];
 
   let event;
+
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
-      signature,
+      payload,
+      sig,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err) {
-    return res.status(400).send(`Webhook error: ${err.message}`);
+    console.error('Webhook Error:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (event.type === 'checkout.session.completed')
-    createBookingCheckout(event.data.object);
+  // Handle the event
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object;
+      // Fulfill the purchase...
+      createBookingCheckout(session);
+      break;
+    // Handle other event types as needed
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
 
-  res.status(200).json({ received: true });
+  // Return a response to acknowledge receipt of the event
+  res.json({ received: true });
 };
 
 exports.createBooking = factory.createOne(Booking);
